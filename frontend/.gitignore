@@ -11,6 +11,10 @@
 # production
 /build
 
+# auth related
+.env
+isatwhere-197ba-firebase-adminsdk-kwegv-28d60e8a9a.json
+
 # misc
 .DS_Store
 .env.local
