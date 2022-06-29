@@ -2,6 +2,7 @@ import { auth } from '../auth/firebase-config'
 import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
+import { useNavigate } from 'react-router-dom';
 
 const AuthComponent = () => {
     const providerGoogle = new GoogleAuthProvider()
@@ -12,6 +13,7 @@ const AuthComponent = () => {
 
     const [err, setErr] = useState("")
     const [showErr, setShowErr] = useState(true);
+    const navigate = useNavigate()
 
 
     const signUpWithTwitter = () => {
@@ -48,6 +50,7 @@ const AuthComponent = () => {
                 console.log('credential: ', credential);
                 console.log('token: ', token);
 
+                navigate('/home')
             })
             .catch((error) => {
                 setErr(error.message)
