@@ -21,6 +21,10 @@ export function UserAuthContextProvider({ children }) {
         return signInWithPopup(auth, GoogleAuthProvider)
     }
 
+    function logout() {
+        return signOut(auth)
+    }
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser)
@@ -31,7 +35,7 @@ export function UserAuthContextProvider({ children }) {
     }, [])
 
     return (
-        <userAuthContext.Provider value={{ user, logInWithPopupTwitter }}>
+        <userAuthContext.Provider value={{ user, logInWithPopupTwitter, logout }}>
             {children}
         </userAuthContext.Provider>
     )

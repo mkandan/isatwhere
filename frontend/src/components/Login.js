@@ -3,7 +3,6 @@ import { auth } from '../auth/firebase-config'
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
-import { useUserAuth } from '../auth/UserAuthContext';
 
 const Login = () => {
     const providerTwitter = new TwitterAuthProvider()

@@ -1,5 +1,5 @@
 import { auth } from '../auth/firebase-config'
-import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, linkWithPopup, signInWithRedirect, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import { useNavigate } from 'react-router-dom';
