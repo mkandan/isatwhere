@@ -1,18 +1,23 @@
 import { auth } from '../auth/firebase-config'
 import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { useState } from 'react'
+import Alert from 'react-bootstrap/Alert'
 
 const AuthComponent = () => {
     const providerGoogle = new GoogleAuthProvider()
     const providerTwitter = new TwitterAuthProvider()
 
-    const [twitterSignedIn, setTwitterSignedIn] = useState(false)
-    const [googleSignedIn, setGoogleSignedIn] = useState(false)
+    const [twitterSignedUp, setTwitterSignedUp] = useState(false)
+    const [googleSignedUp, setGoogleSignedUp] = useState(false)
 
-    const signInWithTwitter = () => {
+    const [err, setErr] = useState("")
+    const [showErr, setShowErr] = useState(true);
+
+
+    const signUpWithTwitter = () => {
         signInWithPopup(auth, providerTwitter)
             .then((result) => {
-                setTwitterSignedIn(true)
+                setTwitterSignedUp(true)
 
                 console.log(result)
                 console.log('providerId: ', result.providerId);
@@ -24,14 +29,15 @@ const AuthComponent = () => {
                 console.log('token: ', token);
             })
             .catch((error) => {
+                setErr(error.message)
                 console.log('error: ', error);
             })
     }
 
-    const signInWithGoogle = () => {
+    const signUpWithGoogle = () => {
         signInWithPopup(auth, providerGoogle)
             .then((result) => {
-                setGoogleSignedIn(true)
+                setGoogleSignedUp(true)
 
                 console.log(result)
                 console.log('providerId: ', result.providerId);
@@ -44,19 +50,25 @@ const AuthComponent = () => {
 
             })
             .catch((error) => {
+                setErr(error.message)
                 console.log('error: ', error);
             })
     }
 
     return (
         <div>
-            <button onClick={signInWithTwitter}>
-                Sign in with Twitter {twitterSignedIn ? '✅' : '❌'}
+            {
+                err && showErr && <Alert variant='danger' dismissible onClose={() => setShowErr(false)}>{err}</Alert>
+            }
+            <button onClick={signUpWithTwitter}>
+                Sign in with Twitter {twitterSignedUp ? '✅' : '❌'}
             </button>
             <br />
-            <button onClick={signInWithGoogle}>
-                Sign in with Google {googleSignedIn ? '✅' : '❌'}
-            </button>
+            {
+                twitterSignedUp && <button onClick={signUpWithGoogle}>
+                    Sign in with Google {googleSignedUp ? '✅' : '❌'}
+                </button>
+            }
         </div>
     )
 }
