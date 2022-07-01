@@ -3,7 +3,8 @@ import { useUserAuth, UserAuthContext } from "../auth/UserAuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import CalEvents from "./CalEvents";
 import Login from "./Login";
-import { useContext } from "react";
+import { useContext } from "react"; //save for backup displayName method
+import TwitterTests from "./twittertests";
 
 const Home = () => {
     const { user, logout, twitterDisplayName } = useUserAuth()
@@ -30,6 +31,9 @@ const Home = () => {
             <p>Currently Displaying: {user.displayName}</p>
             <p>Currently Displaying2: {twitterDisplayName}</p>
             <Button variant='primary' onClick={handleLogout}>Logout</Button>
+            <br />
+            <h2>twitter api test</h2>
+            <TwitterTests />
             <CalEvents />
         </>
     );
