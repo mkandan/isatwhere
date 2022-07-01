@@ -1,7 +1,8 @@
 import { auth } from '../auth/firebase-config'
-import { getAuth, signInWithPopup, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, linkWithPopup, signInWithRedirect, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
+import { useNavigate } from 'react-router-dom';
 
 const AuthComponent = () => {
     const providerGoogle = new GoogleAuthProvider()
@@ -12,7 +13,7 @@ const AuthComponent = () => {
 
     const [err, setErr] = useState("")
     const [showErr, setShowErr] = useState(true);
-
+    const navigate = useNavigate()
 
     const signUpWithTwitter = () => {
         signInWithPopup(auth, providerTwitter)
@@ -23,31 +24,27 @@ const AuthComponent = () => {
                 console.log('providerId: ', result.providerId);
                 console.log('display name: ', result._tokenResponse.displayName)
 
-                const credential = TwitterAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                console.log('credential: ', credential);
-                console.log('token: ', token);
-            })
-            .catch((error) => {
-                setErr(error.message)
-                console.log('error: ', error);
-            })
-    }
+                const popupTwitter_credential = TwitterAuthProvider.credentialFromResult(result);
+                const popupTwitter_token = popupTwitter_credential.accessToken;
 
-    const signUpWithGoogle = () => {
-        signInWithPopup(auth, providerGoogle)
-            .then((result) => {
-                setGoogleSignedUp(true)
+                console.log('popupTwitter_credential: ', popupTwitter_credential);
+                console.log('popupTwitter_token: ', popupTwitter_token);
 
-                console.log(result)
-                console.log('providerId: ', result.providerId);
-                console.log('display name: ', result._tokenResponse.displayName)
+                linkWithPopup(auth.currentUser, providerGoogle).then((result) => {
+                    const linkGoogle_credential = GoogleAuthProvider.credentialFromResult(result);
+                    const linkGoogle_user = result.user;
+                    const linkGoogle_token = linkGoogle_credential.accessToken;
 
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                console.log('credential: ', credential);
-                console.log('token: ', token);
+                    setGoogleSignedUp(true)
+                    navigate('/home')
 
+                    console.log('linkGoogle_credential: ', linkGoogle_credential);
+                    console.log('linkGoogle_token: ', linkGoogle_token);
+                    console.log('linkGoogle_user: ', linkGoogle_user);
+                }).catch((error) => {
+                    setErr(error.message)
+                    console.log('error: ', error);
+                })
             })
             .catch((error) => {
                 setErr(error.message)
@@ -61,12 +58,12 @@ const AuthComponent = () => {
                 err && showErr && <Alert variant='danger' dismissible onClose={() => setShowErr(false)}>{err}</Alert>
             }
             <button onClick={signUpWithTwitter}>
-                Sign in with Twitter {twitterSignedUp ? '✅' : '❌'}
+                First, sign in with Twitter {twitterSignedUp ? '✅' : '❌'}
             </button>
             <br />
             {
-                twitterSignedUp && <button onClick={signUpWithGoogle}>
-                    Sign in with Google {googleSignedUp ? '✅' : '❌'}
+                twitterSignedUp && <button>
+                    Then, sign in with Google {googleSignedUp ? '✅' : '❌'}
                 </button>
             }
         </div>
