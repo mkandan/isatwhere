@@ -1,19 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider, TwitterAuthProvider } from 'firebase/auth'
+import { signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider, TwitterAuthProvider } from 'firebase/auth'
 import { auth } from './firebase-config'
 
-const userAuthContext = createContext()
+export const UserAuthContext = createContext()
 
 export function UserAuthContextProvider({ children }) {
 
     const [user, setUser] = useState("")
+    const [twitterDisplayName, setTwitterDisplayName] = useState("")
 
-    // function signUpWithEmailAndPassword(email, password) {
-    //     return createUserWithEmailAndPassword(auth, email, password)
-    // }
-    // function logInWithEmailAndPassword(email, password) {
-    //     return signInWithEmailAndPassword(auth, email, password)
-    // }
     function logInWithPopupTwitter() {
         return signInWithPopup(auth, TwitterAuthProvider)
     }
@@ -35,12 +30,12 @@ export function UserAuthContextProvider({ children }) {
     }, [])
 
     return (
-        <userAuthContext.Provider value={{ user, logInWithPopupTwitter, logout }}>
+        <UserAuthContext.Provider value={{ user, logInWithPopupTwitter, logout, twitterDisplayName, setTwitterDisplayName }}>
             {children}
-        </userAuthContext.Provider>
+        </UserAuthContext.Provider>
     )
 }
 
 export function useUserAuth() {
-    return useContext(userAuthContext)
+    return useContext(UserAuthContext)
 }
