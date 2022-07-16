@@ -1,40 +1,31 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../auth/firebase-config'
-import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
+import { signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 import { useContext, useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
-import { useUserAuth, UserAuthContext } from '../auth/UserAuthContext';
+import { UserAuthContext } from '../auth/UserAuthContext';
+import { axios } from 'axios'
 
 const Login = () => {
     const providerTwitter = new TwitterAuthProvider()
-
-    const [twitterLoggedIn, setTwitterLoggedIn] = useState(false)
 
     const [err, setErr] = useState("")
     const [showErr, setShowErr] = useState(true);
     const navigate = useNavigate()
 
-    const { twitterDisplayName, setTwitterDisplayName } = useUserAuth()
-    // const { twitterDisplayName, setTwitterDisplayName } = useContext(UserAuthContext)
+    const { twitterLoggedIn, setTwitterLoggedIn, setoAuth_credential, setoAuth_token, setoAuth_secret } = useContext(UserAuthContext)
 
-    const logInWithTwitter = () => {
+    const logInWithTwitter2 = () => {
+        console.log('here login');
         signInWithPopup(auth, providerTwitter)
             .then((result) => {
                 setTwitterLoggedIn(true)
 
-                console.log(result)
-                console.log('providerId: ', result.providerId);
-                console.log('display name: ', result._tokenResponse.displayName)
+                let cred = TwitterAuthProvider.credentialFromResult(result)
+                setoAuth_credential(cred)
+                setoAuth_token(cred.accessToken)
+                setoAuth_secret(cred.secret)
 
-
-                setTwitterDisplayName(result._tokenResponse.displayName)
-                console.log('twitterDisplayName: ', twitterDisplayName);
-
-
-                const credential = TwitterAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                console.log('credential: ', credential);
-                console.log('token: ', token);
                 navigate('/home')
             })
             .catch((error) => {
@@ -48,7 +39,8 @@ const Login = () => {
             {
                 err && showErr && <Alert variant='danger' dismissible onClose={() => setShowErr(false)}>{err}</Alert>
             }
-            <button onClick={logInWithTwitter}>
+            <button onClick={logInWithTwitter2}>
+                {/* <button onClick={logInWithPopupTwitter}> */}
                 Login with Twitter {twitterLoggedIn ? '✅' : '❌'}
             </button>
             <p>
