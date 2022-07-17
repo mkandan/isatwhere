@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import { Routes, Route } from "react-router-dom"
 import Login from './components/Login';
@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <div className="App">
-      <h1>navbar ig</h1>
+      <h1>navbar</h1>
       <UserAuthContextProvider>
         <Routes>
           <Route path='/' element={<Login />}></Route>

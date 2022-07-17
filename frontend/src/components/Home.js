@@ -1,16 +1,27 @@
 import { Button } from "react-bootstrap";
 import { useUserAuth, UserAuthContext } from "../auth/UserAuthContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CalEvents from "./CalEvents";
-import Login from "./Login";
+import { axios } from 'axios'
 import { useContext } from "react";
 
 const Home = () => {
-    const { user, logout, twitterDisplayName } = useUserAuth()
-    // const { twitterDisplayName } = useContext(UserAuthContext)
+    // const { user, logout } = useUserAuth()
+    const { user, logout, oAuth_token, oAuth_secret } = useContext(UserAuthContext)
+
     const navigate = useNavigate()
-    console.log(user)
-    // console.log("user uid: ", user.uid);
+
+    function getTwitterUsername() {
+        return user.reloadUserInfo.screenName
+    }
+
+    const getTwitterPhotoUrl = () => {
+        return user.providerData[0].photoURL
+    }
+
+    const getTwitterDisplayName = () => {
+        return user.providerData[0].displayName
+    }
 
     const handleLogout = async () => {
         try {
@@ -24,12 +35,13 @@ const Home = () => {
 
     return (
         <>
-            <h1>welcome home, {user && `@${user.reloadUserInfo.screenName}`}
-                {user && <img src={user.photoURL} alt="pfp" />}
+            <h1>welcome, {user && `@${getTwitterUsername()}`}
+                {user && <img src={getTwitterPhotoUrl()} alt="pfp" />}
             </h1>
-            <p>Currently Displaying: {user.displayName}</p>
-            <p>Currently Displaying2: {twitterDisplayName}</p>
+            <p>Currently Displaying: {getTwitterDisplayName()}</p>
             <Button variant='primary' onClick={handleLogout}>Logout</Button>
+            <p>token: {oAuth_token}</p>
+            <p>secret: {oAuth_secret}</p>
             <CalEvents />
         </>
     );

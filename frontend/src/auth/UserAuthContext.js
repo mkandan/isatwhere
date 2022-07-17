@@ -6,11 +6,30 @@ export const UserAuthContext = createContext()
 
 export function UserAuthContextProvider({ children }) {
 
-    const [user, setUser] = useState("")
-    const [twitterDisplayName, setTwitterDisplayName] = useState("")
+    const [user, setUser] = useState()
+    const [twitterLoggedIn, setTwitterLoggedIn] = useState(false)
+    const [oAuth_credential, setoAuth_credential] = useState()
+    const [oAuth_token, setoAuth_token] = useState()
+    const [oAuth_secret, setoAuth_secret] = useState()
 
     function logInWithPopupTwitter() {
-        return signInWithPopup(auth, TwitterAuthProvider)
+        console.log('here');
+        signInWithPopup(auth, TwitterAuthProvider)
+            .then((result) => {
+                console.log('woah im here?');
+
+                setTwitterLoggedIn(true)
+
+                let cred = TwitterAuthProvider.credentialFromResult(result)
+                setoAuth_credential(cred)
+                setoAuth_token(cred.accessToken)
+                setoAuth_secret(cred.secret)
+
+                return signInWithPopup(auth, TwitterAuthProvider)
+            })
+            .catch((error) => {
+                console.log('error: ', error);
+            })
     }
     function logInWithPopupGoogle() {
         return signInWithPopup(auth, GoogleAuthProvider)
@@ -30,7 +49,7 @@ export function UserAuthContextProvider({ children }) {
     }, [])
 
     return (
-        <UserAuthContext.Provider value={{ user, logInWithPopupTwitter, logout, twitterDisplayName, setTwitterDisplayName }}>
+        <UserAuthContext.Provider value={{ user, logInWithPopupTwitter, logout, twitterLoggedIn, setTwitterLoggedIn, oAuth_credential, setoAuth_credential, oAuth_token, setoAuth_token, oAuth_secret, setoAuth_secret }}>
             {children}
         </UserAuthContext.Provider>
     )

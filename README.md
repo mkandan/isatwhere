@@ -11,3 +11,5 @@ Connect multiple auth providers to 1 account (https://firebase.google.com/docs/a
 
 Google Calendar API & OAuth Screen (https://www.youtube.com/watch?v=c2b2yUNWFzI&t=267s)
 
+Twitter V1.1 API to Express.js backend (https://www.youtube.com/watch?v=1KwbjY_5qYU)
+
