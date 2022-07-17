@@ -40,8 +40,10 @@ const Home = () => {
             console.log('oAuth_secret: ', oAuth_secret); //works
             axios
                 .get('/api/twitter/auth', {
-                    oAuth_token,
-                    oAuth_secret
+                    params: {
+                        oAuth_token,
+                        oAuth_secret
+                    }
                 })
                 .then(response => {
                     console.log('response: ', response);

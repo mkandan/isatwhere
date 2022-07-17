@@ -23,15 +23,15 @@ router.get('/', async (req, res, next) => {
   res.send({ message: 'Ok api is working 🚀' });
 });
 
-router.get('/auth', (req, res, next) => {
+router.get('/auth', async (req, res, next) => {
   console.log('in express router.post');
   try {
-    const { oAuth_token, oAuth_secret } = req.body
+    const { oAuth_token, oAuth_secret } = req.query
 
-    console.log('oAuth_secret: ', oAuth_secret);
     console.log('oAuth_token: ', oAuth_token);
+    console.log('oAuth_secret: ', oAuth_secret);
 
-    res.status(200).json({ success: true, token: 'hi token', secret: 'hi secret' })
+    res.status(200).json({ success: true, token: oAuth_token, secret: oAuth_secret })
     // res.status(200).send('yoyoy')
   }
   catch (error) {
