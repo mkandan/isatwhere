@@ -1,8 +1,6 @@
 const router = require('express').Router();
 const Twitter = require('twitter');
 const TwitterLite = require('twitter-lite')
-let tempToken = ''
-let tempSecret = ''
 
 const client = new Twitter({
   consumer_key: process.env.REACT_APP_TWITTER_APIKEY,
@@ -10,7 +8,6 @@ const client = new Twitter({
   access_token_key: process.env.REACT_APP_TWITTER_ACCESS,
   access_token_secret: process.env.REACT_APP_TWITTER_ACCESS_SECRET,
   bearer_token: process.env.REACT_APP_TWITTER_BEARER,
-
 })
 
 const clientLite = new TwitterLite({
@@ -26,13 +23,16 @@ router.get('/', async (req, res, next) => {
   res.send({ message: 'Ok api is working 🚀' });
 });
 
-router.post('/auth', (req, res, next) => {
+router.get('/auth', (req, res, next) => {
+  console.log('in express router.post');
   try {
-    const { token, secret } = req.query
-    tempToken = token
-    tempSecret = secret
+    const { oAuth_token, oAuth_secret } = req.body
 
-    res.status(200).json({ success: true, token: token, secret: secret })
+    console.log('oAuth_secret: ', oAuth_secret);
+    console.log('oAuth_token: ', oAuth_token);
+
+    res.status(200).json({ success: true, token: 'hi token', secret: 'hi secret' })
+    // res.status(200).send('yoyoy')
   }
   catch (error) {
     next(error)

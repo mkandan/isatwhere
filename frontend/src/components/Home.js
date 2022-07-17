@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import { useUserAuth, UserAuthContext } from "../auth/UserAuthContext";
 import { useNavigate } from "react-router-dom";
 import CalEvents from "./CalEvents";
-import { axios } from 'axios'
+import axios from 'axios'
 import { useContext } from "react";
 
 const Home = () => {
@@ -33,6 +33,27 @@ const Home = () => {
         }
     }
 
+    const getCredData = async () => {
+        console.log('post button pressed'); //works
+        try {
+            console.log('oAuth_token: ', oAuth_token); //works
+            console.log('oAuth_secret: ', oAuth_secret); //works
+            axios
+                .get('/api/twitter/auth', {
+                    oAuth_token,
+                    oAuth_secret
+                })
+                .then(response => {
+                    console.log('response: ', response);
+                })
+                .catch(error => {
+                    console.log(error.message);
+                })
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     return (
         <>
             <h1>welcome, {user && `@${getTwitterUsername()}`}
@@ -42,6 +63,7 @@ const Home = () => {
             <Button variant='primary' onClick={handleLogout}>Logout</Button>
             <p>token: {oAuth_token}</p>
             <p>secret: {oAuth_secret}</p>
+            <button onClick={getCredData}>getCredData</button>
             <CalEvents />
         </>
     );
