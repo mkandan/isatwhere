@@ -1,5 +1,5 @@
 import { auth } from '../auth/firebase-config'
-import { getAuth, signInWithPopup, linkWithPopup, signInWithRedirect, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, linkWithPopup, signInWithRedirect, GoogleAuthProvider, TwitterAuthProvider, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,14 @@ const AuthComponent = () => {
     const [err, setErr] = useState("")
     const [showErr, setShowErr] = useState(true);
     const navigate = useNavigate()
+
+    setPersistence(auth, browserSessionPersistence)
+        .then(() => {
+            return signUpWithTwitter
+        })
+        .catch((error) => {
+            console.log(error.message);
+        })
 
     const signUpWithTwitter = () => {
         signInWithPopup(auth, providerTwitter)
